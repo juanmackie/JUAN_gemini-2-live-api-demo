@@ -37,6 +37,11 @@ export class GeminiWebsocketClient extends EventEmitter {
             return this.connectionPromise;
         }
 
+        // Close any existing connection before reconnecting
+        if (this.ws && (this.ws.readyState === WebSocket.CLOSING || this.ws.readyState === WebSocket.CLOSED)) {
+            this.ws = null; // Reset the WebSocket instance
+        }
+
         console.info('🔗 Establishing WebSocket connection...');
         this.isConnecting = true;
         this.connectionPromise = new Promise((resolve, reject) => {
